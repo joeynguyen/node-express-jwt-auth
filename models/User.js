@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', async function (next) {
   // encrypt the password
   const salt = await bcrypt.genSalt();
+  // `this` refers to the request object with the email and pw
   this.password = await bcrypt.hash(this.password, salt);
   next();
 });
@@ -30,6 +31,20 @@ userSchema.post('save', function (doc, next) {
   console.log('new user was created & saved', doc);
   next();
 });
+
+// static method to login user
+userSchema.statics.login = async function(email, password) {
+  // `this` refers to the the userSchema
+  const user = await this.findOne({ email });
+  if (user) {
+    const auth = await bcrypt.compare(password, user.password);
+    if (auth) {
+      return user;
+    }
+    throw Error('incorrect password');
+  }
+  throw Error('incorrect email');
+};
 
 const User = mongoose.model('user', userSchema);
 
