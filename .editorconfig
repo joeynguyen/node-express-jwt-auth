@@ -1,0 +1,14 @@
+root = true
+
+[*]
+charset = utf-8
+# setting end_of_line may mess up editing across operating systems
+#end_of_line = lf
+indent_size = 2
+indent_style = space
+insert_final_newline = true
+max_line_length = 80
+trim_trailing_whitespace = true
+
+[*.{css,scss}]
+indent_size = 4
